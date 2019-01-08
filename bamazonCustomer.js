@@ -27,11 +27,11 @@ const purchase = () => {
             message: "Input 'close' if you want to end the program or 'display' if you want to display the items again."
             + "\n  Otherwise, what is the id of the item you would you like to order?",
             validate: function (value) {
-                if (value === "close") {
+                if (value.trim() === "close") {
                     connection.end();
                     connection.end();
                 }
-                if (value === "display")
+                if (value.trim() === "display")
                     return display(data); //will return false, but will also re-display the information 
                 return itemIDList.indexOf(parseFloat(value)) > -1;
             }
@@ -42,7 +42,7 @@ const purchase = () => {
                 type: "input",
                 message: chosenItem.product_name + " chosen. " + chosenItem.stock_quantity + " left in stock. How many would you like to order?",
                 validate: value => {
-                    if (isNaN(value) || value < 0 || value % 1 !== 0)
+                    if (value.trim() === "" || isNaN(value) || value < 0 || value % 1 !== 0)
                         return false;
                     if (value > chosenItem.stock_quantity) {
                         console.log("\nSorry but we do not have that many of this item. Please choose a smaller number.");

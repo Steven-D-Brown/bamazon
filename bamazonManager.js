@@ -99,7 +99,7 @@ const changeQuant = () => {
         type: "input",
         message: "What is the new quantity of the item in stock?",
         validate: value => {
-            if (isNaN(value) || value < 0 || value % 1 !== 0)
+            if (value.trim() === "" || isNaN(value) || value < 0 || value % 1 !== 0 || value > 2147483647)
                 return false;
             return true;
         }
@@ -124,7 +124,7 @@ const addNew = () => {
         type: "input",
         message: "What is the name of the new product?",
         validate: value =>{
-            if(value === "")
+            if(value.trim() === "")
                 return false;
             return true;
         }
@@ -140,7 +140,7 @@ const addNew = () => {
         type: "input",
         message: "What will the price be?",
         validate: value => {
-            if (isNaN(value) || round(value) <= 0)
+            if (value.trim() === "" || isNaN(value) || round(value) <= 0 || round(value) >= 1000000000)
                 return false;
             return true;
         }
@@ -150,13 +150,13 @@ const addNew = () => {
         type: "input",
         message: "How many of this product are in stock?",
         validate: value => {
-            if (isNaN(value) || value < 0 || value % 1 !== 0)
+            if (value.trim() === "" || isNaN(value) || value < 0 || value % 1 !== 0 || value > 2147483647)
                 return false;
             return true;
         }
     }
     ]).then(data => {
-        connection.query("INSERT INTO products SET product_name = ?, department_name = ?, price = ?, stock_quantity = ?", [data.pn, data.dept, round(data.price), data.stock], err => {
+        connection.query("INSERT INTO products SET product_name = ?, department_name = ?, price = ?, stock_quantity = ?", [data.pn.trim(), data.dept, round(data.price), data.stock], err => {
             if (err) throw err;
             console.log("Data entry successful.");
             manage();
@@ -189,12 +189,12 @@ const rename = () => {
             type: "input",
             message: "What should the name of this item be?",
             validate: value =>{
-                if(value === "")
+                if(value.trim() === "")
                     return false;
                 return true;
             }
         }).then(answer => {
-            connection.query("UPDATE products SET product_name = ? WHERE item_id = ?", [answer.newName, selectedItem.item_id]);
+            connection.query("UPDATE products SET product_name = ? WHERE item_id = ?", [answer.newName.trim(), selectedItem.item_id]);
             console.log("Product name now " + answer.newName + ".");
             manage();
         });
@@ -228,7 +228,7 @@ const reprice = () => {
             type: "input",
             message: "What should the price of this item be?",
             validate: value => {
-                if (isNaN(value) || round(value) <= 0)
+                if (value.trim() === "" || isNaN(value) || round(value) <= 0 || round(value) >= 1000000000)
                     return false;
                 return true;
             }
